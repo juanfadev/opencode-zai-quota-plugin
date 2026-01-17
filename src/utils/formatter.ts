@@ -19,12 +19,12 @@ export function formatTime(seconds: number): string {
   const secs = seconds % 60;
 
   if (hours > 0) {
-    return `${hours}h ${minutes}m`;
+    return hours + 'h ' + minutes + 'm';
   }
   if (minutes > 0) {
-    return `${minutes}m ${secs}s`;
+    return minutes + 'm ' + secs + 's';
   }
-  return `${secs}s`;
+  return secs + 's';
 }
 
 /**

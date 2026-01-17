@@ -104,8 +104,9 @@ export class Logger {
   error(message: string, error?: unknown): void {
     if (this.shouldLog(LogLevel.ERROR)) {
       const formatted = this.formatMessage('ERROR', message);
+      const dataString = error !== undefined ? JSON.stringify(error) : '';
       if (error !== undefined) {
-        console.error(formatted, error);
+        console.error(formatted + ' ' + dataString);
       } else {
         console.error(formatted);
       }
