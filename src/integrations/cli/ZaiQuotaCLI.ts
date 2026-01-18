@@ -27,10 +27,20 @@ program
     const spinner = ora('Checking quota...').start();
 
     try {
-      const agent = new ZaiQuotaAgent(
-        options.apiKey || getApiKey(),
-        options.endpoint
-      );
+      // Validate API key before creating agent
+      const apiKey = options.apiKey || getApiKey();
+      if (!apiKey) {
+        spinner.stop();
+        console.error(chalk.red('\n❌ API key is required'));
+        console.error(chalk.yellow('Set one of the following:'));
+        console.error(chalk.cyan('  1. Use: opencode connect (to add to OpenCode providers/API Keys)'));
+        console.error(chalk.cyan('  2. Set: ZAI_API_KEY environment variable'));
+        console.error(chalk.cyan('  3. Or use: zai-quota check --api-key <your_key>'));
+        console.error(chalk.yellow('\nOnce configured, the CLI will automatically read from OpenCode auth.json'));
+        process.exit(1);
+      }
+
+      const agent = new ZaiQuotaAgent(apiKey, options.endpoint);
 
       const result = await agent.checkQuota({ forceRefresh: options.force });
 
