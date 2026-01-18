@@ -19,10 +19,85 @@
 
 ## Installation
 
-### npm
-
+### Option 1: Install Globally (CLI)
 ```bash
 npm install -g opencode-zai-quota-plugin
+
+# Check quota
+zai-quota check
+
+# Show config
+zai-quota config
+
+# Clear cache
+zai-quota clear-cache
+```
+
+### Option 2: Install Locally (as dependency)
+```bash
+cd your-project
+npm install opencode-zai-quota-plugin
+```
+
+### Option 3: Install from GitHub
+```bash
+npm install git+https://github.com/juanfadev/opencode-zai-quota-plugin.git
+```
+
+## Usage
+
+### OpenCode Integration (Recommended)
+
+**Setup your Z.ai API key in OpenCode:**
+
+1. Run `opencode` in your terminal
+2. Navigate to "Providers" or "API Keys"
+3. Add Z.ai (Zhipu AI) with your API key
+4. Your key is stored in `~/.local/share/opencode/auth.json`
+
+**After setup, use directly:**
+
+```bash
+# No need to pass API key - it reads from OpenCode's auth.json
+zai-quota check
+
+# Show configuration
+zai-quota config
+
+# Clear cache
+zai-quota clear-cache
+```
+
+The CLI automatically reads your Z.ai API key from OpenCode's authentication file.
+
+### Using as Library
+
+```bash
+# Set API key as environment variable
+export ZAI_API_KEY=your_api_key_here
+
+# Check quota
+zai-quota check
+
+# Or pass API key directly
+zai-quota check --api-key your_api_key_here
+```
+
+### Using in TypeScript/JavaScript
+
+```typescript
+import { ZaiQuotaAgent } from 'opencode-zai-quota-plugin';
+
+// The agent will automatically use your API key from OpenCode's auth.json
+const agent = new ZaiQuotaAgent();
+
+async function checkQuota() {
+  const quota = await agent.checkQuota();
+  console.log('Sessions remaining:', quota.sessions.remaining);
+  console.log('Status:', quota.overallStatus);
+}
+
+checkQuota();
 ```
 
 ### Development Setup

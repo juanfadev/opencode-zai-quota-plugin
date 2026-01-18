@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import { ZaiConfigError } from './ZaiQuotaResponse';
+import { getApiKey as getApiKeyFromAuth } from '../utils/auth';
 
 /**
  * Z.ai API endpoints
@@ -31,11 +32,9 @@ export class ZaiConfig {
   private cacheTTL: number;
 
   constructor(options: ZaiConfigOptions = {}) {
-    // Load environment variables
     dotenv.config();
 
-    // Priority: options parameter > environment variables > defaults
-    this.apiKey = options.apiKey || process.env.ZAI_API_KEY || '';
+    this.apiKey = options.apiKey || process.env.ZAI_API_KEY || getApiKeyFromAuth() || '';
     this.endpoint = options.endpoint || process.env.ZAI_ENDPOINT || ZaiEndpoint.INTERNATIONAL;
     this.timeout = options.timeout || parseInt(process.env.ZAI_TIMEOUT || '10000', 10);
     this.cacheEnabled = options.cacheEnabled ?? (process.env.ZAI_CACHE_ENABLED !== 'false');

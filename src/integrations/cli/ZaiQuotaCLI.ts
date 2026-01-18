@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { ZaiQuotaAgent } from '../opencode/ZaiQuotaAgent';
 import { ZaiQuotaError, ZaiAuthenticationError, ZaiConfig } from '../../core/ZaiQuotaClient';
+import { getApiKey } from '../../utils/auth';
 
 const program = new Command();
 
@@ -27,7 +28,7 @@ program
 
     try {
       const agent = new ZaiQuotaAgent(
-        options.apiKey || process.env.ZAI_API_KEY,
+        options.apiKey || getApiKey(),
         options.endpoint
       );
 
@@ -85,13 +86,20 @@ program
   .description('Show current configuration')
   .action(() => {
     try {
-      const config = new ZaiConfig();
-      console.log(chalk.cyan('Current Configuration:'));
-      console.log(`  API Key: ${config.getApiKey().substring(0, 8)}...`);
-      console.log(`  Endpoint: ${config.getEndpoint()}`);
-      console.log(`  Timeout: ${config.getTimeout()}ms`);
-      console.log(`  Cache Enabled: ${config.isCacheEnabled()}`);
-      console.log(`  Cache TTL: ${config.getCacheTTL()}s`);
+      const apiKey = getApiKey();
+      if (apiKey) {
+        const config = new ZaiConfig({ apiKey });
+        console.log(chalk.cyan('Current Configuration:'));
+        console.log(`  API Key: ${apiKey.substring(0, 8)}...`);
+        console.log(`  Endpoint: ${config.getEndpoint()}`);
+        console.log(`  Timeout: ${config.getTimeout()}ms`);
+        console.log(`  Cache Enabled: ${config.isCacheEnabled()}`);
+        console.log(`  Cache TTL: ${config.getCacheTTL()}s`);
+        console.log(`  Source: OpenCode auth.json`);
+      } else {
+        console.log(chalk.yellow('No API key found in OpenCode auth.json'));
+        console.log(chalk.cyan('  Set ZAI_API_KEY environment variable or use --api-key option'));
+      }
     } catch (error) {
       if (error instanceof Error) {
         console.error(chalk.red(`Error: ${error.message}`));

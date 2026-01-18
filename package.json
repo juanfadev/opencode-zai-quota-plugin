@@ -1,7 +1,7 @@
 {
   "name": "opencode-zai-quota-plugin",
   "version": "1.0.0",
-  "description": "OpenCode plugin for checking Z.ai GLM API quota and usage statistics",
+  "description": "OpenCode plugin and CLI tool for checking Z.ai (Zhipu AI) GLM API quota and usage statistics. Reads API keys from OpenCode's auth.json.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
